@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        var inizio = setInterval("movimento()", 2);
+        var xIniziale = 100;
+        var yIniziale = Math.floor(Math.random() * 800) + 50;
+        var xIncrementa = 5;
+        var yIncrementa = 5;
+        var posizioneRacchetta;
+        var punteggio = 0;
+
+        var ahem = new Audio('erm-what-the-sigma_su7GnzC.mp3');
+        var boing = new Audio('boing.mp3');
+        var colpo = new Audio('racchetta.mp3');
+
+        document.onmousemove = siStaMuovendoIlMouseIncredibile;
+
+        document.getElementById("palla").style.width = "100px";
+
+        function movimento(){
+
+
+            document.getElementById("palla").style.left = xIniziale + "px";
+            document.getElementById("palla").style.top = yIniziale + "px";
+            xIniziale += xIncrementa;
+            yIniziale += yIncrementa;
+            
+            if (yIniziale + 200 > window.innerHeight || yIniziale < 0){
+                yIncrementa = yIncrementa * -1;
+                //boing.play();
+            }
+
+            if (xIniziale + 200 > window.innerWidth){
+                xIncrementa = xIncrementa * -1;
+                //boing.play();
+            }
+
+            if (xIniziale < 50){
+                //controlla se la palla tocca la racchetta
+                var racchetta = parseInt(document.getElementById("racchetta").style.top.split('p')[0]);
+                if (racchetta < yIniziale + 200 && racchetta + 300 > yIniziale){
+                    colpo.play()
+                    xIncrementa = xIncrementa * -1;
+                    punteggio++;
+                    document.getElementById("punteggio").innerHTML = "Punti: " + punteggio;
+                }
+                else{
+                    ahem.play();
+                    alert("sei un tontolone")
+                    punteggio = 0;
+                    document.getElementById("punteggio").innerHTML = "Punti: " + punteggio;
+                    clearInterval(inizio);
+                    xIniziale = 100;
+                    yIniziale = Math.floor(Math.random() * 800) + 50;
+                    xIncrementa = 5;
+                    yIncrementa = 5;
+                    inizio = setInterval("movimento()", 2)
+                }
+            }
+        }
+
+        function siStaMuovendoIlMouseIncredibile(event){
+
+            document.getElementById("racchetta").style.top = event.clientY - 150 + "px";
+            if (event.clientY > window.innerHeight - 200){
+                document.getElementById("racchetta").style.top = window.innerHeight - 350 + "px";
+            }
+            else if (event.clientY < 200){
+                document.getElementById("racchetta").style.top = "50px";
+            }
+        }
+
+    </script>
+
+</head>
+<body>
+    <div id="punteggio">
+        Punti: 
+    </div>
+    <img src="https://media.tenor.com/2pGLoW_EO6sAAAAj/tennis-tennis-ball.gif" id="palla" style="position:absolute;top:10;left:10;">
+    <img src="racchetta.png" id="racchetta" style="position:absolute;top:20px;left:50px;">
+</body>
+</html>
